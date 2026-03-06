@@ -8,6 +8,7 @@ use App\Support\BotTemplates;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class BotController extends Controller
@@ -43,6 +44,12 @@ class BotController extends Controller
             'button_text' => $defaults['button_text'] ?? null,
             'settings_json' => $defaults['settings_json'] ?? [],
             'flow_json' => BotTemplates::flow($validated['template_key'], $defaults),
+        ]);
+
+        Log::info('Bot created', [
+            'bot_id' => $bot->id,
+            'user_id' => $request->user()->id,
+            'template_key' => $bot->template_key,
         ]);
 
         return to_route('dashboard', ['bot' => $bot->id])->with('status', 'Bot created. Customize and publish when ready.');
@@ -95,6 +102,11 @@ class BotController extends Controller
 
         $bot->save();
 
+        Log::info('Bot updated', [
+            'bot_id' => $bot->id,
+            'user_id' => $request->user()->id,
+        ]);
+
         return to_route('dashboard', ['bot' => $bot->id])->with('status', 'Bot content updated.');
     }
 
@@ -123,12 +135,30 @@ class BotController extends Controller
                 ]);
 
                 $bot->webhook_status = $response->successful() ? 'configured' : 'failed';
+
+                Log::info('Bot publish webhook response', [
+                    'bot_id' => $bot->id,
+                    'user_id' => $request->user()->id,
+                    'webhook_status' => $bot->webhook_status,
+                    'telegram_response_status' => $response->status(),
+                    'telegram_response_body' => $response->json(),
+                ]);
             } catch (\Throwable) {
                 $bot->webhook_status = 'failed';
+                Log::error('Bot publish webhook request failed', [
+                    'bot_id' => $bot->id,
+                    'user_id' => $request->user()->id,
+                ]);
             }
         }
 
         $bot->save();
+
+        Log::info('Bot published', [
+            'bot_id' => $bot->id,
+            'user_id' => $request->user()->id,
+            'webhook_status' => $bot->webhook_status,
+        ]);
 
         return to_route('dashboard', ['bot' => $bot->id])->with('status', 'Bot published. Webhook status updated in settings.');
     }
@@ -171,6 +201,13 @@ class BotController extends Controller
             'sent_at' => now(),
         ]);
 
+        Log::info('Broadcast created', [
+            'bot_id' => $bot->id,
+            'user_id' => $request->user()->id,
+            'audience' => $validated['audience'],
+            'recipient_count' => $recipientCount,
+        ]);
+
         return to_route('dashboard', ['bot' => $bot->id])->with('status', "Broadcast queued for {$recipientCount} users.");
     }
 
@@ -181,6 +218,11 @@ class BotController extends Controller
     {
         $this->assertOwnership($request, $bot);
 
+        Log::warning('Bot deleted', [
+            'bot_id' => $bot->id,
+            'user_id' => $request->user()->id,
+        ]);
+
         $bot->delete();
 
         return to_route('dashboard')->with('status', 'Bot deleted.');
@@ -188,6 +230,19 @@ class BotController extends Controller
 
     private function assertOwnership(Request $request, Bot $bot): void
     {
-        abort_unless($bot->user_id === $request->user()->id, 403);
+        $botUserId = (int) $bot->user_id;
+        $requestUserId = (int) $request->user()->id;
+
+        if ($botUserId !== $requestUserId) {
+            Log::warning('Bot ownership check failed', [
+                'bot_id' => $bot->id,
+                'bot_user_id' => $botUserId,
+                'request_user_id' => $requestUserId,
+                'path' => $request->path(),
+                'method' => $request->method(),
+            ]);
+        }
+
+        abort_unless($botUserId === $requestUserId, 403);
     }
 }

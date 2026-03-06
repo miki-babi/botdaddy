@@ -8,6 +8,7 @@ use App\Support\TelegramFlowEngine;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class TelegramWebhookController extends Controller
 {
@@ -19,6 +20,11 @@ class TelegramWebhookController extends Controller
         $bot = $this->resolveBot($request);
 
         if (! $bot) {
+            Log::warning('Telegram webhook bot not resolved', [
+                'has_secret_header' => $request->hasHeader('X-Telegram-Bot-Api-Secret-Token'),
+                'token_query' => $request->query('token'),
+            ]);
+
             return response()->json(['ok' => false, 'message' => 'Bot not found'], 404);
         }
 
@@ -26,6 +32,11 @@ class TelegramWebhookController extends Controller
 
         $this->trackSubscriber($bot, $payload);
         $engine->handle($bot, $payload);
+
+        Log::info('Telegram webhook processed', [
+            'bot_id' => $bot->id,
+            'update_keys' => array_keys($payload),
+        ]);
 
         return response()->json(['ok' => true]);
     }
