@@ -3,6 +3,7 @@
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\BotDashboardController;
 use App\Http\Controllers\TelegramWebhookController;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -10,7 +11,9 @@ Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
 
-Route::post('/telegram/webhook', TelegramWebhookController::class)->name('telegram.webhook');
+Route::post('/telegram/webhook', TelegramWebhookController::class)
+    ->withoutMiddleware([ValidateCsrfToken::class])
+    ->name('telegram.webhook');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [BotDashboardController::class, 'index'])->name('dashboard');

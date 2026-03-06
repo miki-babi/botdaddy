@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Bot;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TelegramFlowEngine
 {
@@ -96,11 +97,19 @@ class TelegramFlowEngine
             return;
         }
 
-        Http::timeout(8)
+        $response = Http::timeout(8)
             ->post($this->apiUrl($bot, 'sendMessage'), [
                 'chat_id' => $chatId,
                 'text' => $text,
             ]);
+        Log::info('Telegram sendMessage attempted', [
+            'bot_id' => $bot->id,
+            'chat_id' => $chatId,
+            'text_preview' => mb_substr($text, 0, 80),
+            'telegram_status' => $response->status(),
+            'telegram_ok' => $response->successful(),
+            'telegram_body' => $response->json(),
+        ]);
     }
 
     /**
@@ -132,7 +141,7 @@ class TelegramFlowEngine
             return;
         }
 
-        Http::timeout(8)
+        $response = Http::timeout(8)
             ->post($this->apiUrl($bot, 'sendMessage'), [
                 'chat_id' => $chatId,
                 'text' => 'Choose an option:',
@@ -140,6 +149,14 @@ class TelegramFlowEngine
                     'inline_keyboard' => $inlineKeyboard,
                 ],
             ]);
+
+        Log::info('Telegram buttons message attempted', [
+            'bot_id' => $bot->id,
+            'chat_id' => $chatId,
+            'button_count' => count($inlineKeyboard),
+            'telegram_status' => $response->status(),
+            'telegram_ok' => $response->successful(),
+        ]);
     }
 
     private function apiUrl(Bot $bot, string $method): string
