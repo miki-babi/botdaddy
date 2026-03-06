@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bot;
 use App\Models\BotSubscriber;
 use App\Support\TelegramFlowEngine;
+use App\Support\TelegramUpdateNormalizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -15,8 +16,11 @@ class TelegramWebhookController extends Controller
     /**
      * Handle all Telegram updates for all bots.
      */
-    public function __invoke(Request $request, TelegramFlowEngine $engine): JsonResponse
-    {
+    public function __invoke(
+        Request $request,
+        TelegramFlowEngine $engine,
+        TelegramUpdateNormalizer $normalizer
+    ): JsonResponse {
         $bot = $this->resolveBot($request);
 
         if (! $bot) {
@@ -31,11 +35,22 @@ class TelegramWebhookController extends Controller
         $payload = $request->all();
 
         $this->trackSubscriber($bot, $payload);
-        $engine->handle($bot, $payload);
+
+        $event = $normalizer->normalize($payload);
+        if (! $event) {
+            Log::info('Telegram webhook ignored unsupported update', [
+                'bot_id' => $bot->id,
+                'update_keys' => array_keys($payload),
+            ]);
+
+            return response()->json(['ok' => true]);
+        }
+
+        $engine->handle($bot, $event);
 
         Log::info('Telegram webhook processed', [
             'bot_id' => $bot->id,
-            'update_keys' => array_keys($payload),
+            'event' => $event,
         ]);
 
         return response()->json(['ok' => true]);
