@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\TelegramWebhookController::__invoke
-* @see app/Http/Controllers/TelegramWebhookController.php:17
+* @see app/Http/Controllers/TelegramWebhookController.php:18
 * @route '/telegram/webhook'
 */
 export const webhook = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ webhook.definition = {
 
 /**
 * @see \App\Http\Controllers\TelegramWebhookController::__invoke
-* @see app/Http/Controllers/TelegramWebhookController.php:17
+* @see app/Http/Controllers/TelegramWebhookController.php:18
 * @route '/telegram/webhook'
 */
 webhook.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ webhook.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\TelegramWebhookController::__invoke
-* @see app/Http/Controllers/TelegramWebhookController.php:17
+* @see app/Http/Controllers/TelegramWebhookController.php:18
 * @route '/telegram/webhook'
 */
 webhook.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +35,7 @@ webhook.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\TelegramWebhookController::__invoke
-* @see app/Http/Controllers/TelegramWebhookController.php:17
+* @see app/Http/Controllers/TelegramWebhookController.php:18
 * @route '/telegram/webhook'
 */
 const webhookForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +45,7 @@ const webhookForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Http\Controllers\TelegramWebhookController::__invoke
-* @see app/Http/Controllers/TelegramWebhookController.php:17
+* @see app/Http/Controllers/TelegramWebhookController.php:18
 * @route '/telegram/webhook'
 */
 webhookForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

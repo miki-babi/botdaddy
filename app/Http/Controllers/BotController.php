@@ -75,7 +75,8 @@ class BotController extends Controller
             'support_button_text' => ['nullable', 'string', 'max:120'],
         ]);
 
-        $settings = (array) $bot->settings_json;
+        $existingSettings = (array) $bot->settings_json;
+        $settings = $existingSettings;
         foreach (['faq_answer', 'lead_prompt_name', 'lead_prompt_phone', 'support_button_text'] as $settingKey) {
             if (array_key_exists($settingKey, $validated) && $validated[$settingKey]) {
                 $settings[$settingKey] = $validated[$settingKey];
@@ -92,13 +93,16 @@ class BotController extends Controller
             'settings_json' => $settings,
         ]);
 
-        $bot->flow_json = BotTemplates::flow($bot->template_key, [
-            'welcome_message' => $bot->welcome_message,
-            'support_username' => $bot->support_username,
-            'products_link' => $bot->products_link,
-            'button_text' => $bot->button_text,
-            'settings_json' => $settings,
-        ]);
+        $flowOverrideEnabled = (bool) ($existingSettings['flow_override'] ?? false);
+        if (! $flowOverrideEnabled) {
+            $bot->flow_json = BotTemplates::flow($bot->template_key, [
+                'welcome_message' => $bot->welcome_message,
+                'support_username' => $bot->support_username,
+                'products_link' => $bot->products_link,
+                'button_text' => $bot->button_text,
+                'settings_json' => $settings,
+            ]);
+        }
 
         $bot->save();
 
@@ -108,6 +112,45 @@ class BotController extends Controller
         ]);
 
         return to_route('dashboard', ['bot' => $bot->id])->with('status', 'Bot content updated.');
+    }
+
+    /**
+     * Update bot flow JSON from dashboard editor.
+     */
+    public function updateFlow(Request $request, Bot $bot): RedirectResponse
+    {
+        $this->assertOwnership($request, $bot);
+
+        $validated = $request->validate([
+            'flow_json' => ['required', 'string'],
+        ]);
+
+        $decoded = json_decode($validated['flow_json'], true);
+        if (! is_array($decoded)) {
+            Log::warning('Bot flow update failed: invalid JSON', [
+                'bot_id' => $bot->id,
+                'user_id' => $request->user()->id,
+            ]);
+
+            return back()->withErrors([
+                'flow_json' => 'Flow JSON must be a valid JSON array of blocks.',
+            ]);
+        }
+
+        $settings = (array) $bot->settings_json;
+        $settings['flow_override'] = true;
+
+        $bot->flow_json = $decoded;
+        $bot->settings_json = $settings;
+        $bot->save();
+
+        Log::info('Bot flow updated manually', [
+            'bot_id' => $bot->id,
+            'user_id' => $request->user()->id,
+            'flow_blocks' => count($decoded),
+        ]);
+
+        return to_route('dashboard', ['bot' => $bot->id])->with('status', 'Flow updated.');
     }
 
     /**

@@ -17,6 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('bots', [BotController::class, 'store'])->name('bots.store');
     Route::patch('bots/{bot}', [BotController::class, 'update'])->name('bots.update');
+    Route::patch('bots/{bot}/flow', [BotController::class, 'updateFlow'])->name('bots.flow.update');
     Route::post('bots/{bot}/publish', [BotController::class, 'publish'])->name('bots.publish');
     Route::post('bots/{bot}/broadcast', [BotController::class, 'broadcast'])->name('bots.broadcast');
     Route::delete('bots/{bot}', [BotController::class, 'destroy'])->name('bots.destroy');

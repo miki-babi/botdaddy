@@ -24,7 +24,8 @@
         support_username: string | null;
         products_link: string | null;
         button_text: string | null;
-        settings_json: Record<string, string> | null;
+        settings_json: Record<string, unknown> | null;
+        flow_json: unknown;
         status: string;
         webhook_status: string;
         created_at: string;
@@ -72,6 +73,13 @@
         if (!date) return '-';
 
         return new Date(date).toLocaleDateString();
+    };
+
+    const formatFlow = (flow: unknown) => JSON.stringify(flow ?? [], null, 2);
+
+    const settingValue = (settings: Record<string, unknown> | null, key: string) => {
+        const value = settings?.[key];
+        return typeof value === 'string' ? value : '';
     };
 </script>
 
@@ -180,6 +188,7 @@
                                                 <Link href={`/dashboard?bot=${bot.id}`} class="text-primary underline underline-offset-2">Open</Link>
                                                 <Link href={`/dashboard?bot=${bot.id}#edit-content`} class="text-primary underline underline-offset-2">Edit</Link>
                                                 <Link href={`/dashboard?bot=${bot.id}#broadcast`} class="text-primary underline underline-offset-2">Broadcast</Link>
+                                                <Link href={`/dashboard?bot=${bot.id}#flow-editor`} class="text-primary underline underline-offset-2">Flow</Link>
                                                 <Link href={`/dashboard?bot=${bot.id}#analytics`} class="text-primary underline underline-offset-2">Analytics</Link>
                                             </div>
                                         </td>
@@ -276,7 +285,7 @@
                                     <Input
                                         id="edit_support_button_text"
                                         name="support_button_text"
-                                        value={selectedBot.settings_json?.support_button_text || ''}
+                                        value={settingValue(selectedBot.settings_json, 'support_button_text')}
                                         placeholder="Support"
                                     />
                                 </div>
@@ -284,29 +293,29 @@
 
                             <div class="grid gap-2 md:grid-cols-2">
                                 <div class="grid gap-2">
-                                    <Label for="edit_faq_answer">FAQ Answer</Label>
-                                    <Input
-                                        id="edit_faq_answer"
-                                        name="faq_answer"
-                                        value={selectedBot.settings_json?.faq_answer || ''}
-                                    />
+                                        <Label for="edit_faq_answer">FAQ Answer</Label>
+                                        <Input
+                                            id="edit_faq_answer"
+                                            name="faq_answer"
+                                            value={settingValue(selectedBot.settings_json, 'faq_answer')}
+                                        />
+                                    </div>
+                                    <div class="grid gap-2">
+                                        <Label for="edit_lead_name">Lead Prompt (Name)</Label>
+                                        <Input
+                                            id="edit_lead_name"
+                                            name="lead_prompt_name"
+                                            value={settingValue(selectedBot.settings_json, 'lead_prompt_name')}
+                                        />
+                                    </div>
                                 </div>
-                                <div class="grid gap-2">
-                                    <Label for="edit_lead_name">Lead Prompt (Name)</Label>
-                                    <Input
-                                        id="edit_lead_name"
-                                        name="lead_prompt_name"
-                                        value={selectedBot.settings_json?.lead_prompt_name || ''}
-                                    />
-                                </div>
-                            </div>
 
                             <div class="grid gap-2">
                                 <Label for="edit_lead_phone">Lead Prompt (Phone)</Label>
                                 <Input
                                     id="edit_lead_phone"
                                     name="lead_prompt_phone"
-                                    value={selectedBot.settings_json?.lead_prompt_phone || ''}
+                                    value={settingValue(selectedBot.settings_json, 'lead_prompt_phone')}
                                 />
                             </div>
 
@@ -402,6 +411,27 @@
                         </div>
                     </div>
                 </div>
+            </section>
+
+            <section id="flow-editor" class="rounded-xl border bg-card p-5">
+                <h3 class="text-lg font-semibold">Flow Editor</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Edit and save the bot flow JSON directly.</p>
+
+                <Form action={`/bots/${selectedBot.id}/flow`} method="patch" class="mt-4 space-y-4">
+                    {#snippet children({ errors, processing })}
+                        <div class="grid gap-2">
+                            <Label for="flow_json">Flow JSON</Label>
+                            <textarea
+                                id="flow_json"
+                                name="flow_json"
+                                rows="18"
+                                class="w-full rounded-md border border-input bg-background px-3 py-2 font-mono text-xs"
+                            >{formatFlow(selectedBot.flow_json)}</textarea>
+                            {#if errors.flow_json}<p class="text-xs text-destructive">{errors.flow_json}</p>{/if}
+                        </div>
+                        <Button type="submit" disabled={processing}>Save Flow</Button>
+                    {/snippet}
+                </Form>
             </section>
 
             <section id="analytics" class="rounded-xl border bg-card p-5">

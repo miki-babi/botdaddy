@@ -1,7 +1,8 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
+import flow from './flow'
 /**
 * @see \App\Http\Controllers\BotController::store
-* @see app/Http/Controllers/BotController.php:18
+* @see app/Http/Controllers/BotController.php:19
 * @route '/bots'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +17,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\BotController::store
-* @see app/Http/Controllers/BotController.php:18
+* @see app/Http/Controllers/BotController.php:19
 * @route '/bots'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -25,7 +26,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\BotController::store
-* @see app/Http/Controllers/BotController.php:18
+* @see app/Http/Controllers/BotController.php:19
 * @route '/bots'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -35,7 +36,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\BotController::store
-* @see app/Http/Controllers/BotController.php:18
+* @see app/Http/Controllers/BotController.php:19
 * @route '/bots'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -45,7 +46,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\BotController::store
-* @see app/Http/Controllers/BotController.php:18
+* @see app/Http/Controllers/BotController.php:19
 * @route '/bots'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -57,7 +58,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\BotController::update
-* @see app/Http/Controllers/BotController.php:54
+* @see app/Http/Controllers/BotController.php:61
 * @route '/bots/{bot}'
 */
 export const update = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -72,7 +73,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\BotController::update
-* @see app/Http/Controllers/BotController.php:54
+* @see app/Http/Controllers/BotController.php:61
 * @route '/bots/{bot}'
 */
 update.url = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -105,7 +106,7 @@ update.url = (args: { bot: string | number | { id: string | number } } | [bot: s
 
 /**
 * @see \App\Http\Controllers\BotController::update
-* @see app/Http/Controllers/BotController.php:54
+* @see app/Http/Controllers/BotController.php:61
 * @route '/bots/{bot}'
 */
 update.patch = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -115,7 +116,7 @@ update.patch = (args: { bot: string | number | { id: string | number } } | [bot:
 
 /**
 * @see \App\Http\Controllers\BotController::update
-* @see app/Http/Controllers/BotController.php:54
+* @see app/Http/Controllers/BotController.php:61
 * @route '/bots/{bot}'
 */
 const updateForm = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -130,7 +131,7 @@ const updateForm = (args: { bot: string | number | { id: string | number } } | [
 
 /**
 * @see \App\Http\Controllers\BotController::update
-* @see app/Http/Controllers/BotController.php:54
+* @see app/Http/Controllers/BotController.php:61
 * @route '/bots/{bot}'
 */
 updateForm.patch = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -147,7 +148,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\BotController::publish
-* @see app/Http/Controllers/BotController.php:104
+* @see app/Http/Controllers/BotController.php:159
 * @route '/bots/{bot}/publish'
 */
 export const publish = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -162,7 +163,7 @@ publish.definition = {
 
 /**
 * @see \App\Http\Controllers\BotController::publish
-* @see app/Http/Controllers/BotController.php:104
+* @see app/Http/Controllers/BotController.php:159
 * @route '/bots/{bot}/publish'
 */
 publish.url = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -195,7 +196,7 @@ publish.url = (args: { bot: string | number | { id: string | number } } | [bot: 
 
 /**
 * @see \App\Http\Controllers\BotController::publish
-* @see app/Http/Controllers/BotController.php:104
+* @see app/Http/Controllers/BotController.php:159
 * @route '/bots/{bot}/publish'
 */
 publish.post = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -205,7 +206,7 @@ publish.post = (args: { bot: string | number | { id: string | number } } | [bot:
 
 /**
 * @see \App\Http\Controllers\BotController::publish
-* @see app/Http/Controllers/BotController.php:104
+* @see app/Http/Controllers/BotController.php:159
 * @route '/bots/{bot}/publish'
 */
 const publishForm = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -215,7 +216,7 @@ const publishForm = (args: { bot: string | number | { id: string | number } } | 
 
 /**
 * @see \App\Http\Controllers\BotController::publish
-* @see app/Http/Controllers/BotController.php:104
+* @see app/Http/Controllers/BotController.php:159
 * @route '/bots/{bot}/publish'
 */
 publishForm.post = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -227,7 +228,7 @@ publish.form = publishForm
 
 /**
 * @see \App\Http\Controllers\BotController::broadcast
-* @see app/Http/Controllers/BotController.php:139
+* @see app/Http/Controllers/BotController.php:212
 * @route '/bots/{bot}/broadcast'
 */
 export const broadcast = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -242,7 +243,7 @@ broadcast.definition = {
 
 /**
 * @see \App\Http\Controllers\BotController::broadcast
-* @see app/Http/Controllers/BotController.php:139
+* @see app/Http/Controllers/BotController.php:212
 * @route '/bots/{bot}/broadcast'
 */
 broadcast.url = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -275,7 +276,7 @@ broadcast.url = (args: { bot: string | number | { id: string | number } } | [bot
 
 /**
 * @see \App\Http\Controllers\BotController::broadcast
-* @see app/Http/Controllers/BotController.php:139
+* @see app/Http/Controllers/BotController.php:212
 * @route '/bots/{bot}/broadcast'
 */
 broadcast.post = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -285,7 +286,7 @@ broadcast.post = (args: { bot: string | number | { id: string | number } } | [bo
 
 /**
 * @see \App\Http\Controllers\BotController::broadcast
-* @see app/Http/Controllers/BotController.php:139
+* @see app/Http/Controllers/BotController.php:212
 * @route '/bots/{bot}/broadcast'
 */
 const broadcastForm = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -295,7 +296,7 @@ const broadcastForm = (args: { bot: string | number | { id: string | number } } 
 
 /**
 * @see \App\Http\Controllers\BotController::broadcast
-* @see app/Http/Controllers/BotController.php:139
+* @see app/Http/Controllers/BotController.php:212
 * @route '/bots/{bot}/broadcast'
 */
 broadcastForm.post = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -307,7 +308,7 @@ broadcast.form = broadcastForm
 
 /**
 * @see \App\Http\Controllers\BotController::destroy
-* @see app/Http/Controllers/BotController.php:180
+* @see app/Http/Controllers/BotController.php:260
 * @route '/bots/{bot}'
 */
 export const destroy = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -322,7 +323,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\BotController::destroy
-* @see app/Http/Controllers/BotController.php:180
+* @see app/Http/Controllers/BotController.php:260
 * @route '/bots/{bot}'
 */
 destroy.url = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -355,7 +356,7 @@ destroy.url = (args: { bot: string | number | { id: string | number } } | [bot: 
 
 /**
 * @see \App\Http\Controllers\BotController::destroy
-* @see app/Http/Controllers/BotController.php:180
+* @see app/Http/Controllers/BotController.php:260
 * @route '/bots/{bot}'
 */
 destroy.delete = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -365,7 +366,7 @@ destroy.delete = (args: { bot: string | number | { id: string | number } } | [bo
 
 /**
 * @see \App\Http\Controllers\BotController::destroy
-* @see app/Http/Controllers/BotController.php:180
+* @see app/Http/Controllers/BotController.php:260
 * @route '/bots/{bot}'
 */
 const destroyForm = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -380,7 +381,7 @@ const destroyForm = (args: { bot: string | number | { id: string | number } } | 
 
 /**
 * @see \App\Http\Controllers\BotController::destroy
-* @see app/Http/Controllers/BotController.php:180
+* @see app/Http/Controllers/BotController.php:260
 * @route '/bots/{bot}'
 */
 destroyForm.delete = (args: { bot: string | number | { id: string | number } } | [bot: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -398,6 +399,7 @@ destroy.form = destroyForm
 const bots = {
     store: Object.assign(store, store),
     update: Object.assign(update, update),
+    flow: Object.assign(flow, flow),
     publish: Object.assign(publish, publish),
     broadcast: Object.assign(broadcast, broadcast),
     destroy: Object.assign(destroy, destroy),
